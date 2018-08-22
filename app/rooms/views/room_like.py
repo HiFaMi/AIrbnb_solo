@@ -16,7 +16,7 @@ class RoomsLikes(APIView):
 
     def post(self, request, pk):
         if request.user.is_authenticated:
-            user = User.objects.get(user=request.user)
+            user = User.objects.get(pk=request.user.pk)
             room = Rooms.objects.get(pk=pk)
 
             if not user.likes_posts.filter(pk=room.pk).exists():
