@@ -48,6 +48,6 @@ class UserSignupSerializer(serializers.ModelSerializer):
             password=self.validated_data['password']
         )
         user.save()
-        send_mail.delay()
+        send_mail.delay(user.pk)
 
         return validated_data
