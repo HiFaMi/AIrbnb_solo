@@ -18,6 +18,7 @@ djangorestframework = "*"
 django-filter = "*"
 requests = "*"
 arrow = "*"
+celery = "*"
 
 [dev-packages]
 awsebcli = "*"

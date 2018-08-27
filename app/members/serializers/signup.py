@@ -9,6 +9,8 @@ from django.utils.http import urlsafe_base64_encode
 from rest_framework import serializers
 
 from config.settings import base
+from members.tasks import send_mail
+
 from ..tokens import account_activation_token
 
 User = get_user_model()
@@ -47,17 +49,19 @@ class UserSignupSerializer(serializers.ModelSerializer):
         )
         user.save()
 
-        message = render_to_string('account_activate_email.html', {
-            'user': user,
-            'domain': 'leesoo.kr',
-            'uid': urlsafe_base64_encode(force_bytes(user.pk)).decode('utf-8'),
-            'token': account_activation_token.make_token(user)
-        })
+        # message = render_to_string('account_activate_email.html', {
+        #     'user': user,
+        #     'domain': 'localhost:8000',
+        #     'uid': urlsafe_base64_encode(force_bytes(user.pk)).decode('utf-8'),
+        #     'token': account_activation_token.make_token(user)
+        # })
+        #
+        # # secrets = base.secrets
+        # mail_subject = 'test'
+        # to_email = validated_data['username']
+        # email = EmailMessage(mail_subject, message, to=[to_email])
+        # email.send()
 
-        # secrets = base.secrets
-        mail_subject = 'test'
-        to_email = validated_data['username']
-        email = EmailMessage(mail_subject, message, to=[to_email])
-        email.send()
+        send_mail.delay()
 
         return validated_data
